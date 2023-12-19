@@ -19,6 +19,7 @@ public class Board {
 	private String content;
 	private Date regDate;
 	private Date updDate;
+	private int likes;
 	
 	// 첨부파일
 	private MultipartFile[] files;

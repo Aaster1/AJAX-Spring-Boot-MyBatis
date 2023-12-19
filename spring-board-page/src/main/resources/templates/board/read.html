@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시글 읽기</title>
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body>
     <!-- 사이드 바 -->
     <aside id="sidebar">
@@ -16,9 +18,9 @@
             </a>
         </div>
         <ul>
-            <li><a href="../index.html">Home</a></li>
-            <li><a href="../board/list.html">Board</a></li>
-            <li><a href="../gallery/list.html">Gallery</a></li>
+            <li><a href="/index">Home</a></li>
+            <li><a href="/board/list">Board</a></li>
+            <li><a href="/gallery/list">Gallery</a></li>
         </ul>
     </aside>
 
@@ -31,13 +33,13 @@
         <div class="menu">
             <nav>
                 <ul class="pc">
-                    <li><a href="../index.html">Home</a></li>
-                    <li><a href="../board/list.html">Board</a></li>
-                    <li><a href="../gallery/list.html">Gallery</a></li>
+                    <li><a href="/index">Home</a></li>
+                    <li><a href="/board/list">Board</a></li>
+                    <li><a href="/gallery/list">Gallery</a></li>
                 </ul>
                 <ul class="mobile">
                     <li>
-                        <a href="../index.html"><span class="material-symbols-outlined">home</span></a>
+                        <a href="/index"><span class="material-symbols-outlined">home</span></a>
                     </li>
                     <li>
                         <a href="javascript:;" id="btn-menu"><span class="material-symbols-outlined">menu</span></a>
@@ -53,7 +55,8 @@
             <!-- 제목 영역 -->
             <div class="main-title">
                 <h1>게시글 읽기</h1>
-                <p>커뮤니티 게시글 정보를 조회합니다.<p>
+                <p>커뮤니티 게시글 정보를 조회합니다.
+                <p>
             </div>
 
             <div class="info-box">
@@ -96,10 +99,10 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="label">파일</td>
+                    <td class="label">좋아요수</td>
                     <td class="data">
                         <!-- 파일 목록 -->
-                        <ul id="file-list"></ul>
+                        <ul id="like-count"></ul>
                     </td>
                 </tr>
             </table>
@@ -120,7 +123,7 @@
                     </div>
                     <div class="bottom">
                         <p class="comment-content">
-                            안녕하세요 댓글입니다...
+                            안녕하세요 댓글입니다.
                         </p>
                         <div class="etc-box">
                             <a href="javascript:;" class="btn btn-sm btn-comment">답글</a>
@@ -138,21 +141,22 @@
                 <div class="comment-input">
                     <input type="text" name="writer" id="comment-writer" placeholder="작성자">
                     <br>
-                    <textarea name="content" id="comment-content" 
-                              cols="60" rows="5" placeholder="댓글을 작성해주세요"></textarea>
+                    <textarea name="content" id="comment-content" cols="60" rows="5"
+                        placeholder="댓글을 작성해주세요"></textarea>
                     <div class="btn-box">
                         <a href="javascript:;" id="btn-comment-insert" class="btn btn-sm">등록</a>
                     </div>
                 </div>
             </div>
 
-            
+
 
             <div class="btn-box">
                 <div class="item">
-                    <a href="list.html" class="btn">목록</a>
+                    <a href="list" class="btn">목록</a>
                 </div>
                 <div class="item">
+                    <a href="javascript:;" class="btn btn-like">좋아요/해제</a>
                     <a href="javascript:;" class="btn btn-update">수정</a>
                     <a href="javascript:;" class="btn btn-delete">삭제</a>
                 </div>
@@ -167,7 +171,7 @@
     <!-- sweetalert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script src="../js/main.js"></script>
+    <script src="/js/main.js"></script>
 
     <script>
 
@@ -175,23 +179,22 @@
         const urlParams = new URLSearchParams(location.search)
         // ?boardNo=100   (100 <-- 글번호 가져오기)
         let boardNo = urlParams.get('boardNo')
-        
-        if( boardNo != null ) {
+
+        if (boardNo != null) {
             getBoard()
-            getFileList()
+            // getFileList()
             getCommentList()
         }
 
         // 게시글 조회
-        function getBoard(){
-            const url = 'http://192.168.30.119:8080/api/board?boardNo=' + boardNo
-            
+        function getBoard() {
+            const url = 'http://localhost:8080/api/board?boardNo=' + boardNo
+
             $.ajax({
-                url     : url,
-                type    : 'GET',
-                success : function(response) {
+                url: url,
+                type: 'GET',
+                success: function (response) {
                     let board = response
-                    console.log(board);
                     $('#title').text(board.title)
                     $('#writer').text(board.writer)
                     $('#content').text(board.content)
@@ -203,15 +206,16 @@
                     const regDate = date.toISOString().split("T")[0]
                     const regTime = date.toISOString().split("T")[1].split(".")[0]
                     $('#regDate').text(regDate + " / " + regTime)
-                    
-                    
+
+
                     const date2 = new Date(board.updDate)
                     date2.setMinutes(date2.getMinutes() + kst)
                     const updDate = date2.toISOString().split("T")[0]
                     const updTime = date2.toISOString().split("T")[1].split(".")[0]
                     $('#updDate').text(updDate + " / " + updTime)
+                    $('#like-count').text(board.likes)
                 },
-                error           : function(request, status, error){
+                error: function (request, status, error) {
                     // alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                     Swal.fire(
                         '에러!',
@@ -223,13 +227,68 @@
             })
         }
 
+        $('.btn-like').on('click', function () {
+
+            let url = 'http://localhost:8080/api/likeEvent'
+
+            let data = {
+                'parentTable': 'board',
+                'parentNo' : boardNo,
+                'username': '강진수'
+            }
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                dataType: 'text',                 // 응답 컨텐츠 타입
+                success: function (response, status) {
+                    if (response == 'UP') {
+                        // alert('삭제가 완료되었습니다.')
+                        Swal.fire(
+                            '좋아요 업!',
+                            '좋아요 수가 올랐습니다!',
+                            'success'
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                // 목록 페이지로 이동
+                                location.href = '/board/read?boardNo=' + boardNo
+                            }
+
+                        })
+                    } else if (response == 'DOWN') {
+                        Swal.fire(
+                            '좋아요 해제!',
+                            '좋아요를 풀었습니다!',
+                            'success'
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                // 목록 페이지로 이동
+                                location.href = '/board/read?boardNo=' + boardNo
+                            }
+                        })
+                    }
+                },
+                error: function (request, status, error) {
+                    // alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    Swal.fire(
+                        '에러!',
+                        'code:' + request.status,
+                        'error'
+                    )
+                }
+
+            })
+
+        })
+
         // 수정 버튼 - 클릭 이벤트
-        $('.btn-update').on('click', function() {
-            location.href = 'update.html?boardNo=' + boardNo
+        $('.btn-update').on('click', function () {
+            location.href = '/board/update?boardNo=' + boardNo
         })
 
         // 삭제 버튼 - 클릭 이벤트
-        $('.btn-delete').on('click', function() {
+        $('.btn-delete').on('click', function () {
 
             // sweetalert - confirm
             Swal.fire({
@@ -246,48 +305,48 @@
                 // result.isConfirmed : false  [아니오]
                 if (result.isConfirmed) {
                     deleteData()
-                    
+
                 }
             })
 
             // let check = confirm('정말로 삭제하시겠습니까?')
             // if( !check ) 
             //     return
-            
+
         })
 
         // 게시글 삭제
         function deleteData() {
 
             // 게시글 삭제 요청
-            let url = 'http://192.168.30.119:8080/api/board'
+            let url = 'http://localhost:8080/api/board'
 
             let data = {
-                'boardNo' : boardNo
+                'boardNo': boardNo
             }
 
             $.ajax({
-                url             :   url,
-                type            :   'DELETE',
-                data            :   data,
-                dataType        :   'text',                 // 응답 컨텐츠 타입
-                success         : function(response, status) {
-                    if( response == 'SUCCESS' ){
+                url: url,
+                type: 'DELETE',
+                data: data,
+                dataType: 'text',                 // 응답 컨텐츠 타입
+                success: function (response, status) {
+                    if (response == 'SUCCESS') {
                         // alert('삭제가 완료되었습니다.')
                         Swal.fire(
                             '삭제 완료!',
                             '게시글 삭제가 완료되었습니다.',
                             'success'
                         ).then((result) => {
-                            if( result.isConfirmed ) {
+                            if (result.isConfirmed) {
                                 // 목록 페이지로 이동
-                                location.href = 'list.html'
+                                location.href = '/board/list'
                             }
 
                         })
                     }
                 },
-                error           : function(request, status, error){
+                error: function (request, status, error) {
                     // alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                     Swal.fire(
                         '에러!',
@@ -301,21 +360,21 @@
         }
 
 
-        
+
         // 댓글 목록 조회
         function getCommentList() {
 
-            const url = 'http://192.168.30.119:8080/api/comment'
+            const url = 'http://localhost:8080/api/comment'
 
             let data = {
-                'boardNo' : boardNo
+                'parentNo': boardNo
             }
 
             $.ajax({
-                url : url,
-                type : 'get',
-                data : data,
-                success : function(response) {
+                url: url,
+                type: 'get',
+                data: data,
+                success: function (response) {
                     let commentList = response
 
                     console.log(commentList)
@@ -332,8 +391,8 @@
                         // 계층번호
                         let depthNo = comment.depthNo
 
-                        let commentBox 
-                        = `<div class="comment-box" style="margin-left: ${depthNo * 60}px;">
+                        let commentBox
+                            = `<div class="comment-box" style="margin-left: ${depthNo * 60}px;">
                                 <div class="data-box">
                                     <div class="top">
                                         <div class="item">
@@ -347,9 +406,6 @@
                                     </div>
                                     <div class="bottom">
                                         <p class="comment-content">${comment.content}</p>
-                                        <div class="etc-box">
-                                            <a href="javascript:;" class="btn btn-sm btn-comment" data="${comment.commentNo}">답글</a>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="edit-box"></div>
@@ -362,43 +418,43 @@
 
                     // 이벤트 추가
                     initCommentEvent()
-                    
+
                 },
-                error : function(error) {
+                error: function (error) {
 
                 }
             })
         }
 
         // 댓글 등록 버튼 - 클릭 이벤트
-        $('#btn-comment-insert').on('click', function() {
+        $('#btn-comment-insert').on('click', function () {
             let writer = $('#comment-writer').val()
             let content = $('#comment-content').val()
 
-            insertComment( writer, content )
+            insertComment(writer, content)
         })
 
 
         // 댓글 등록
-        function insertComment( writer, content ) {
+        function insertComment(writer, content) {
 
-            const url = 'http://192.168.30.119:8080/api/comment'
+            const url = 'http://localhost:8080/api/comment'
 
             let data = {
-                'parentNo'   : boardNo,
-                'parentTable' : 'board',
-                'writer'    : writer,
-                'content'   : content,
+                'parentNo': boardNo,
+                'parentTable': 'board',
+                'writer': writer,
+                'content': content,
             }
 
             $.ajax({
-                url : url,
-                type : 'POST',
-                data : data,
-                success : function(response) {
+                url: url,
+                type: 'POST',
+                data: data,
+                success: function (response) {
                     let result = response
 
-                    if( result == 'SUCCESS' ) {
+                    if (result == 'SUCCESS') {
                         // alert('댓글 등록이 완료되었습니다.')
                         Swal.fire(
                             '완료!',
@@ -414,7 +470,7 @@
 
                     }
                 },
-                error           : function(request, status, error){
+                error: function (request, status, error) {
                     // alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                     Swal.fire(
                         '에러!',
@@ -430,7 +486,7 @@
         function initCommentEvent() {
 
             // 댓글 [수정]
-            $('.btn-comment-update').on('click', function() {
+            $('.btn-comment-update').on('click', function () {
                 // 작성자, 내용 가져오기
                 let btn = $(this)
                 let commentNo = btn.attr('data')
@@ -441,12 +497,12 @@
                 let writer = commentWriter.text()
                 let content = commentContent.text()
 
-                console.log( btn.parents() )                        // 부모요소
-                console.log( btn.parents('.comment-box') )          // 특정 상위요소
-                console.log( commentBox.children() )                // 자식요소
-                console.log( commentBox.find('.comment-writer') )   // 특정 하위요소
-                console.log( writer );
-                console.log( content );
+                console.log(btn.parents())                        // 부모요소
+                console.log(btn.parents('.comment-box'))          // 특정 상위요소
+                console.log(commentBox.children())                // 자식요소
+                console.log(commentBox.find('.comment-writer'))   // 특정 하위요소
+                console.log(writer);
+                console.log(content);
 
                 // 수정 중인 다른 댓글 UI 초기화
                 $('.data-box').show()
@@ -457,8 +513,8 @@
                 commentBox.find('.data-box').hide()
 
                 // 댓글 수정 UI 추가
-                let editBox 
-                = `<div class="top">
+                let editBox
+                    = `<div class="top">
                         <div class="item">
                             <input type="text" id="input-update-writer" value="${writer}" />
                         </div>
@@ -474,10 +530,10 @@
                         </div>
                     </div>
                     `
-                commentBox.find('.edit-box').html(editBox)    
+                commentBox.find('.edit-box').html(editBox)
 
                 // 댓글 [수정] 취소 버튼 클릭
-                $('#btn-comment-cancel').on('click', function() {
+                $('#btn-comment-cancel').on('click', function () {
 
                     commentBox.find('.data-box').show()
                     commentBox.find('.edit-box').empty()
@@ -486,23 +542,23 @@
                 })
 
                 // 댓글 [수정] 수정 버튼 클릭
-                $('#btn-comment-update').on('click', function() {
+                $('#btn-comment-update').on('click', function () {
 
-                    let url = 'http://192.168.30.119:8080/api/comment'
+                    let url = 'http://localhost:8080/api/comment'
 
                     let data = {
-                        commentNo   : commentNo,
-                        writer      : $('#input-update-writer').val(),
-                        content     : $('#input-update-content').val(),
+                        commentNo: commentNo,
+                        writer: $('#input-update-writer').val(),
+                        content: $('#input-update-content').val(),
                     }
 
                     $.ajax({
-                        url     : url,
-                        type    : 'PUT',
-                        data    : data,
-                        success : function(response) {
+                        url: url,
+                        type: 'PUT',
+                        data: data,
+                        success: function (response) {
                             let result = response
-                            if( result == 'SUCCESS' ) {
+                            if (result == 'SUCCESS') {
                                 // alert('댓글 수정이 완료되었습니다.')
 
                                 Swal.fire(
@@ -516,7 +572,7 @@
                             }
 
                         },
-                        error           : function(request, status, error){
+                        error: function (request, status, error) {
                             // alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                             Swal.fire(
                                 '에러!',
@@ -529,11 +585,11 @@
 
                 })
 
-                
+
             })
-            
+
             // 댓글 [삭제]
-            $('.btn-comment-delete').on('click', function() {
+            $('.btn-comment-delete').on('click', function () {
                 let commentNo = $(this).attr('data')
 
                 // let check = confirm('정말로 삭제하시겠습니까?')
@@ -562,19 +618,19 @@
             // 댓글 삭제
             function deleteCommentData(commentNo) {
 
-                
-                let url = 'http://192.168.30.119:8080/api/comment'
+
+                let url = 'http://localhost:8080/api/comment'
                 let data = {
-                    commentNo   : commentNo,
+                    commentNo: commentNo,
                 }
 
                 $.ajax({
-                    url     : url,
-                    type    : 'DELETE',
-                    data    : data,
-                    success : function(response) {
+                    url: url,
+                    type: 'DELETE',
+                    data: data,
+                    success: function (response) {
                         let result = response
-                        if( result == 'SUCCESS' ) {
+                        if (result == 'SUCCESS') {
                             // alert('댓글 삭제가 완료되었습니다.')
                             Swal.fire(
                                 '완료!',
@@ -586,7 +642,7 @@
                         }
 
                     },
-                    error           : function(request, status, error){
+                    error: function (request, status, error) {
                         // alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                         Swal.fire(
                             '에러!',
@@ -596,9 +652,9 @@
                     }
                 })
             }
-            
+
             // 댓글 [답글]
-            $('.btn-comment').on('click', function() {
+            $('.btn-comment').on('click', function () {
 
                 // 댓글 수정 상태를 초기화
                 $('.data-box').show()
@@ -608,8 +664,8 @@
                 let superNo = $(this).attr('data')
 
                 // 답글 작성 UI 추가
-                let replyBox 
-                = `<div class="comment-box reply-box">
+                let replyBox
+                    = `<div class="comment-box reply-box">
                         <div class="edit-box">
                             <div class="top">
                                 <div class="item">
@@ -632,35 +688,35 @@
 
                 let btn = $(this)
                 let commentBox = btn.parents('.comment-box')
-                
+
                 $('.reply-box').remove()                            // 답글 입력 상자 초기화
 
-                commentBox.after( $(replyBox) )
+                commentBox.after($(replyBox))
                 let depthMargin = $(commentBox).css('margin-left')  // 답글 계층별 들여쓰기 크기
                 $('.reply-box').css('margin-left', depthMargin)     // 부모댓글 밑에 들여쓰기 해서 답글UI 추가
 
 
                 // 답글 [등록] 버튼 클릭 이벤트
-                $('#btn-reply-insert').on('click', function() {
+                $('#btn-reply-insert').on('click', function () {
 
-                    let url = 'http://192.168.30.119:8080/api/comment/reply'
+                    let url = 'http://localhost:8080/api/comment/reply'
 
                     let data = {
-                        parentTable : 'board',
-                        parentNo : boardNo,
-                        superNo : superNo,                          // 부모 댓글번호
-                        writer : $('#input-reply-writer').val(),     
-                        content : $('#input-reply-content').val(), 
+                        parentTable: 'board',
+                        parentNo: boardNo,
+                        superNo: superNo,                          // 부모 댓글번호
+                        writer: $('#input-reply-writer').val(),
+                        content: $('#input-reply-content').val(),
                     }
 
                     $.ajax({
-                        url : url,
-                        type : 'POST',
-                        data : data,
-                        success : function(response) {
+                        url: url,
+                        type: 'POST',
+                        data: data,
+                        success: function (response) {
                             let result = response
 
-                            if( result == 'SUCCESS' ) {
+                            if (result == 'SUCCESS') {
                                 // alert('답글 등록이 완료되었습니다.')
                                 Swal.fire(
                                     '완료!',
@@ -672,7 +728,7 @@
                                 getCommentList()
                             }
                         },
-                        error : function(error) {
+                        error: function (error) {
 
                         }
                     })
@@ -681,7 +737,7 @@
 
 
                 // 댓글 [답글] 취소 버튼 클릭 이벤트
-                $('#btn-reply-cancel').on('click', function() {
+                $('#btn-reply-cancel').on('click', function () {
                     $('.reply-box').remove()
                 })
 
@@ -694,17 +750,17 @@
         // 파일 목록 조회
         function getFileList() {
 
-            const url = 'http://192.168.30.119:8080/api/board/file?boardNo=' + boardNo
+            const url = 'http://localhost:8080/api/board/file?boardNo=' + boardNo
 
             $.ajax({
-                url : url,
-                type : 'get',
-                success : function(response) {
+                url: url,
+                type: 'get',
+                success: function (response) {
                     let fileList = response
                     console.log(fileList)
 
                     let fileListData = ''
-                    let fileUrl = 'http://192.168.30.119:8080/api/file'
+                    let fileUrl = 'http://localhost:8080/api/file'
                     for (let i = 0; i < fileList.length; i++) {
                         let fileNo = fileList[i].fileNo
                         let fileName = fileList[i].fileName     // UID_강아지.png
@@ -725,11 +781,11 @@
                     $('#file-list').html(fileListData)
 
                 },
-                error : function(error) {
+                error: function (error) {
 
                 }
             })
-        }        
+        }
 
 
 
@@ -739,4 +795,5 @@
     </script>
 
 </body>
+
 </html>

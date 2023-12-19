@@ -301,7 +301,7 @@
             console.log(boardList)
             for(let i = 0 ; i < boardList.length ; i++ ){
                 const boardNo = boardList[i].boardNo
-                const title = `<a href='read.html?boardNo=${boardNo}'>${boardList[i].title}</a>`
+                const title = `<a href='/board/read?boardNo=${boardNo}'>${boardList[i].title}</a>`
 
                 const date = new Date(boardList[i].regDate)
                 const regDate = date.toISOString().split("T")[0]

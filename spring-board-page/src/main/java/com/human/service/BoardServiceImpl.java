@@ -11,7 +11,9 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.human.domain.Board;
+import com.human.domain.Comment;
 import com.human.domain.Files;
+import com.human.domain.Likes;
 import com.human.domain.Page;
 import com.human.domain.PageInfo;
 import com.human.mapper.BoardMapper;
@@ -40,7 +42,13 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public Board read(int boardNo) throws Exception {
 
-		return mapper.read(boardNo);
+		Board board = mapper.read(boardNo);
+		Likes likes = new Likes();
+		likes.setParentTable("board");
+		likes.setParentNo(boardNo);
+		board.setLikes(mapper.likes(likes));
+
+		return board;
 	}
 
 	@Override
@@ -147,6 +155,65 @@ public class BoardServiceImpl implements BoardService {
 		PageInfo pageInfo = mapper.pageInfo(board);
 
 		return pageInfo;
+	}
+
+	@Override
+	public List<Comment> commentList(Comment comment) throws Exception {
+
+		comment.setParentTable("board");
+		List<Comment> commentList =  mapper.commentList(comment);
+
+
+		return commentList;
+	}
+
+	@Override
+	public int commentInsert(Comment comment) throws Exception {
+		comment.setParentTable("board");
+
+		int result = 0;
+
+		result = mapper.commentInsert(comment);
+
+		return result;
+	}
+
+	@Override
+	public int commentUpdate(Comment comment) throws Exception {
+
+		int result = 0;
+
+		result = mapper.commentUpdate(comment);
+
+
+		return result;
+	}
+
+	@Override
+	public int commentDelete(Comment comment) throws Exception {
+
+		int result = 0;
+
+		result = mapper.commentDelete(comment);
+
+		return result;
+	}
+
+	@Override
+	public int likeEvent(Likes likes) throws Exception {
+
+		int isLikeResult = 0;
+		isLikeResult = mapper.isLike(likes);
+
+		if(isLikeResult>0){
+			mapper.likeDown(likes);
+			return -1;
+		}else{
+			mapper.likeUp(likes);
+			return 1;
+		}
+
+
 	}
 
 }

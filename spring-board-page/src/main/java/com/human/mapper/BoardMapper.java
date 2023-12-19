@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.human.domain.Board;
+import com.human.domain.Comment;
+import com.human.domain.Likes;
 import com.human.domain.Page;
 import com.human.domain.PageInfo;
 
@@ -44,6 +46,23 @@ public interface BoardMapper {
 	public PageInfo pageInfo(Board board) throws Exception;
 
 	public List<Board> pageList (Board board) throws Exception;
+
+	public List<Comment> commentList (Comment comment) throws Exception;
+	
+	public int commentInsert (Comment comment) throws Exception;
+	
+	public int commentUpdate (Comment comment) throws Exception;
+	
+	public int commentDelete (Comment comment) throws Exception;
+
+	public int likes(Likes likes) throws Exception;
+	
+	public int isLike(Likes likes) throws Exception;
+
+	public int likeUp(Likes likes) throws Exception;
+
+	public int likeDown(Likes likes) throws Exception;
+
 
 }
 

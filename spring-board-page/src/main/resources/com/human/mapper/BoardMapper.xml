@@ -102,6 +102,31 @@
 	LIMIT #{pageNo}, #{rows};
 	</select>
 
+<select id="commentList" resultType="Comment"> SELECT * FROM `comment` WHERE parent_table = #{parentTable} AND parent_no = #{parentNo} ORDER BY reg_date DESC </select>
+<insert id="commentInsert"> INSERT INTO `comment` (parent_table,parent_no,writer,content,reg_date,upd_date) VALUES (#{parentTable},#{parentNo},#{writer}, #{content},now(),now()) </insert>
+<update id="commentUpdate"> UPDATE `comment` SET writer = #{writer}, content = #{content}, upd_date = now() WHERE comment_no = #{commentNo} </update>
+<delete id="commentDelete"> DELETE FROM `comment` WHERE comment_no = #{commentNo} </delete>
+
+<select id="likes" resultType="java.lang.Integer">
+
+	SELECT COUNT(*) FROM `likes` WHERE parent_table = #{parentTable} AND parent_no = #{parentNo}
+
+</select>
+
+<select id="isLike" resultType="java.lang.Integer">
+
+	SELECT COUNT(*) FROM `likes` WHERE parent_table = #{parentTable} AND parent_no = #{parentNo} AND username = #{username}
+
+</select>
+
+<insert id="likeUp">
+	INSERT INTO `likes` (parent_table, parent_no, username) VALUES (#{parentTable}, #{parentNo}, #{username})
+</insert>
+
+<delete id="likeDown">
+	DELETE FROM `likes` WHERE parent_table = #{parentTable} AND parent_no = #{parentNo} AND username = #{username}
+</delete>
+
 </mapper>
 
 
