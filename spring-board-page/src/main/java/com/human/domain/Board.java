@@ -20,6 +20,7 @@ public class Board {
 	private Date regDate;
 	private Date updDate;
 	private int likes;
+	private int views;
 	
 	// 첨부파일
 	private MultipartFile[] files;

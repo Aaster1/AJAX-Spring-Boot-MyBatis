@@ -36,8 +36,8 @@
 	<!-- #{index} : 파라미터들을 순서대로 index 로 매핑하여 사용할 수도 있다 -->
 	<!-- 매개변수로 Board 클래스를 지정하면 변수들이 자동으로 #{변수} 파라미터에 매핑된다 -->
 	<insert id="insert">
-		INSERT INTO board ( board_no, title, writer, content )
-		VALUES ( SEQ_BOARD.nextval, #{title}, #{writer}, #{content} )
+		INSERT INTO board ( title, writer, content )
+		VALUES ( #{title}, #{writer}, #{content} )
 		<!--  VALUES ( SEQ_BOARD.nextval, #{0}, #{1}, #{2} )  -->
 	</insert>
 	
@@ -48,7 +48,7 @@
 		   set title = #{title}
 		      ,writer = #{writer}
 		      ,content = #{content}
-		      ,upd_date = sysdate
+		      ,upd_date = now()
 		WHERE board_no = #{boardNo}
 	</update>
 	

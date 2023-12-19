@@ -16,9 +16,8 @@
             </a>
         </div>
         <ul>
-            <li><a href="/index.html">Home</a></li>
-            <li><a href="/board/list.html">Board</a></li>
-            <li><a href="/gallery/list.html">Gallery</a></li>
+            <li><a href="/index">Home</a></li>
+            <li><a href="/board/list">Board</a></li>
         </ul>
     </aside>
 
@@ -31,13 +30,12 @@
         <div class="menu">
             <nav>
                 <ul class="pc">
-                    <li><a href="/index.html">Home</a></li>
-                    <li><a href="/board/list.html">Board</a></li>
-                    <li><a href="/gallery/list.html">Gallery</a></li>
+                    <li><a href="/index">Home</a></li>
+                    <li><a href="/board/list">Board</a></li>
                 </ul>
                 <ul class="mobile">
                     <li>
-                        <a href="/index.html"><span class="material-symbols-outlined">home</span></a>
+                        <a href="/index"><span class="material-symbols-outlined">home</span></a>
                     </li>
                     <li>
                         <a href="javascript:;" id="btn-menu"><span class="material-symbols-outlined">menu</span></a>
@@ -78,19 +76,11 @@
                                     class="input-textarea"></textarea>
                         </td>
                     </tr>
-                    <tr>
-                        <td class="label">파일</td>
-                        <td class="data">
-                            <input type="file" name="file" id="file" multiple>
-                            <!-- 파일 목록 -->
-                            <ul id="file-list"></ul>
-                        </td>
-                    </tr>
                 </table>
 
                 <div class="btn-box">
                     <div class="item">
-                        <a href="list.html" class="btn">목록</a>
+                        <a href="/board/list" class="btn">목록</a>
                     </div>
                     <div class="item">
                         <a href="javascript:;" class="btn btn-update">수정</a>
@@ -118,7 +108,6 @@
         
         if( boardNo != null ) {
             getBoard()
-            getFileList()
         }
 
         // 게시글 조회
@@ -155,25 +144,17 @@
             let writer = $('#writer').val()
             let content = $('#content').val()
 
-            formData.append('boardNo', boardNo)
-            formData.append('title', title)
-            formData.append('writer', writer)
-            formData.append('content', content)
-
-            // 파일 입력 가져오기
-            let file = $('#file')[0]
-            let files = file.files
-            // 파일 데이터 추가
-            for (let i = 0; i < files.length; i++) {
-                formData.append('file[]', files[i])
+            let data = {
+                boardNo : boardNo,
+                title : title,
+                writer : writer,
+                content : content
             }
 
             $.ajax({
                 url             :   url,
                 type            :   'PUT',
-                data            :   formData,
-                contentType     :   false,
-                processData     :   false,
+                data            :   data,
                 success         : function(response, status) {
                     if( response == 'SUCCESS' ){
                         // alert('수정이 완료되었습니다.')
@@ -184,7 +165,7 @@
                         ).then((result) => {
                             if( result.isConfirmed ) {
                                 // 읽기 페이지 이동
-                                location.href = 'read.html?boardNo=' + boardNo
+                                location.href = '/board/read?boardNo=' + boardNo
                             }
                         })
 

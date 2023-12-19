@@ -28,6 +28,7 @@ import com.human.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Slf4j
 @Controller
@@ -430,4 +431,62 @@ public class BoardController {
 		}
 
 	}
+
+	@ResponseBody
+	@PostMapping("/api/board")
+	public String insertBoard(Board board) {
+
+		int result = 0;
+		try {
+			result = service.insert(board);
+			if (result > 0) {
+				return "SUCCESS";
+			} else {
+				return "FAILED";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "FAILED";
+		}
+	}
+
+	@ResponseBody
+	@PutMapping("/api/board")
+	public String updateBoard(Board board) {
+
+		System.out.println("게시글 수정 요청데이터 : "+board);
+		int result = 0;
+		try {
+			result = service.update(board);
+			if (result > 0) {
+				return "SUCCESS";
+			} else {
+				return "FAILED";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "FAILED";
+		}
+	}
+
+	@ResponseBody
+	@DeleteMapping("/api/board")
+	public String deleteBoard(Board board) {
+
+		System.out.println("게시글 삭제 요청데이터 : "+board);
+		int result = 0;
+		try {
+			result = service.delete(board.getBoardNo());
+			if (result > 0) {
+				return "SUCCESS";
+			} else {
+				return "FAILED";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "FAILED";
+		}
+	}
+
+
 }
