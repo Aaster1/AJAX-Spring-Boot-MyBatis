@@ -7,13 +7,12 @@ import org.apache.ibatis.annotations.Param;
 
 import com.human.domain.Board;
 import com.human.domain.Page;
+import com.human.domain.PageInfo;
 
 
 @Mapper				// Mybatis 의 매퍼 인터페이스로 빈 등록
 public interface BoardMapper {
 	
-	// 게시글 목록
-	public List<Board> list() throws Exception;
 	
 	// 게시글 조회
 	public Board read(int boardNo) throws Exception;
@@ -41,8 +40,10 @@ public interface BoardMapper {
 	// 게시글 개수 조회
 	public int count() throws Exception;
 
-	// [페이지] 게시글 목록
-	public List<Board> listWithPage(Page page) throws Exception;
+
+	public PageInfo pageInfo(Board board) throws Exception;
+
+	public List<Board> pageList (Board board) throws Exception;
 
 }
 

@@ -11,12 +11,6 @@
 	<!-- resultType : 조회 결과를 매핑할 클래스 타입 (패키지경로+클래스명) -->
 	<!-- 			  mybatis-cofig.xml 설정파일에서 설정한 별칭이 있으면 별칭으로 작성가능 -->
 	
-	<!-- 게시글 목록 -->
-	<select id="list" resultType="Board">
-		SELECT *
-		FROM board
-		ORDER BY reg_date DESC
-	</select>
 	
 	<!-- 게시글 검색 -->
 	<select id="search" resultType="Board">
@@ -86,8 +80,27 @@
 		 ]]>
 	</select>
 	
-	
-	
+	<select id="pageInfo" resultType="PageInfo">
+	<![CDATA[ SELECT IF(CEIL(#{pageNo} / #{pageCount}) = 1, 1, (CEIL(#{pageNo} / #{pageCount}) - 1) * #{pageCount} + 1) AS startPage, IF(CEIL(#{pageNo} / #{pageCount}) * #{pageCount} > CEIL(#{totalCount} / #{rows}), IF(CEIL(#{totalCount} / #{rows}) = 0, 1, CEIL(#{totalCount} / #{rows})), CEIL(#{pageNo} / #{pageCount}) * #{pageCount} ) AS endPage, 1 AS firstPage, IF(CEIL(#{totalCount} / #{rows}) = 0, 1, CEIL(#{totalCount} / #{rows})) AS lastPage, IF(#{pageNo} > 1, #{pageNo} - 1, 1) AS prev, IF(#{pageNo} < CEIL(#{totalCount} / #{rows}), IF(CEIL(#{totalCount} / #{rows}) = 0, 1, #{pageNo} + 1), IF(CEIL(#{totalCount} / #{rows}) = 0, 1, CEIL(#{totalCount} / #{rows})) ) AS next, #{totalCount} AS totalCount ]]>
+	</select>
+
+	<select id="pageList" resultType="Board">
+	SELECT * FROM board WHERE
+		<choose>
+			<when test="searchType == 0">(title LIKE "%${keyword}%" OR content LIKE "%${keyword}%" OR writer LIKE "%${keyword}%") </when>
+			<when test="searchType == 1">title LIKE "%${keyword}%"</when>
+			<when test="searchType == 2">content LIKE "%${keyword}%"</when>
+			<when test="searchType == 3">(title LIKE "%${keyword}%" OR content LIKE "%${keyword}%")</when>
+			<when test="searchType == 4">writer LIKE "%${keyword}%"</when>
+		</choose>
+		ORDER BY
+		<choose>
+			<when test="order == 0">upd_date DESC</when>
+			<when test="order == 1">title DESC</when>
+			<when test="order == 2">views DESC</when>
+		</choose>
+	LIMIT #{pageNo}, #{rows};
+	</select>
 
 </mapper>
 

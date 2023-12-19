@@ -1,25 +1,32 @@
 package com.human.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.human.domain.Board;
 import com.human.domain.Files;
-import com.human.domain.Page;
+import com.human.domain.PageInfo;
 import com.human.service.BoardService;
 import com.human.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
 
 
 @Slf4j
@@ -55,35 +62,50 @@ public class BoardController {
 	 * @return
 	 * @throws Exception 
 	 */
+	@ResponseBody
+	@GetMapping("/api/board/pagination")
+	public ResponseEntity<PageInfo> getPageInfo(Board board) {
+		PageInfo pageInfo = new PageInfo();
+
+		try {
+			 pageInfo = service.pageInfo(board);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ResponseEntity<PageInfo>(pageInfo,HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@GetMapping("/api/board/page")
+	public ResponseEntity<List<Board>> getPageList(Board board) {
+		
+		List<Board> boardList = new ArrayList<>();
+
+		try {
+			 boardList = service.list(board);
+			 System.out.println(boardList.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ResponseEntity<List<Board>>(boardList,HttpStatus.OK);
+	}
+	
 	@GetMapping("/board/list")
-	public String list(Model model, Page page) throws Exception {
-		
-		List<Board> boardList = service.list(page);
-		
-		log.info("page : " + page);
-		model.addAttribute("page", page);
-		model.addAttribute("boardList", boardList);
-		
-		return "/board/list";		// board/list.html
+	public String boardMain() {
+
+		return "/board/List";
+	}
+
+	@GetMapping("/index")
+	public String main() {
+
+		return "/index";
 	}
 	
-	/**
-	 * 게시글 검색
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@GetMapping(path = "/board/list", params = "keyword")
-	public String search(Model model, String keyword) throws Exception {
-		
-		// 게시글 검색 요청
-		List<Board> boardList = service.list(keyword);
-		
-		model.addAttribute("boardList", boardList);
-		
-		return "/board/list";		// board/list.html
-	}
-	
+
+
 	/**
 	 * 게시글 쓰기 - 화면		GET 	/board/insert
 	 * - /board/insert.html 뷰를 응답

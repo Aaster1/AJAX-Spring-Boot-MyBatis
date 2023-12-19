@@ -22,6 +22,16 @@ public class Board {
 	
 	// 첨부파일
 	private MultipartFile[] files;
+
+
+	//요청 페이지정보
+	private int pageNo;
+	private int rows;
+	private int pageCount;
+	private int totalCount;
+	private int searchType;
+	private String keyword;
+	private int order;
 	
 
 }

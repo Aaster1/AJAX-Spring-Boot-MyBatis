@@ -4,11 +4,10 @@ import java.util.List;
 
 import com.human.domain.Board;
 import com.human.domain.Page;
+import com.human.domain.PageInfo;
 
 public interface BoardService {
 
-	// 게시글 목록
-	public List<Board> list() throws Exception;
 	
 	// 게시글 조회
 	public Board read(int boardNo) throws Exception;
@@ -22,11 +21,10 @@ public interface BoardService {
 	// 게시글 삭제
 	public int delete(int boardNo) throws Exception;
 
-	// 게시글 검색
-	public List<Board> list(String keyword) throws Exception;
-
 	// 페이징 처리
-	public List<Board> list(Page page) throws Exception;
+	public List<Board> list(Board board) throws Exception;
+
+	public PageInfo pageInfo(Board board) throws Exception;
 	
 }
 

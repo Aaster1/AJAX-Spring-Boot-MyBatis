@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-SpringBoardPageApplication<spring-board-page>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.human.SpringBoardPageApplication",
+            "projectName": "spring-board-page",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

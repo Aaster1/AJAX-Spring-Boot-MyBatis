@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시판</title>
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <!-- 사이드 바 -->
@@ -32,7 +32,6 @@
                 <ul class="pc">
                     <li><a href="/index">Home</a></li>
                     <li><a href="/board/list">Board</a></li>
-                    <li><a href="/gallery/list">Gallery</a></li>
                 </ul>
                 <ul class="mobile">
                     <li>
@@ -143,7 +142,7 @@
 
     <!-- script -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="/js/main.js"></script>
 
     <script>
         // 페이지 관련 변수
@@ -166,22 +165,6 @@
 
 
         // 게시글 목록
-        function getList() {
-            const url = 'http://localhost:5050/api/board'
-
-            $.ajax({
-                url     :   url,
-                type    :   'GET',
-                success : function(response) {
-                    let boardList = response
-
-                    displayList( boardList )
-                },
-                error           : function(request, status, error){
-                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                }
-            })
-        }
 
         
         // 페이지 번호
@@ -197,7 +180,7 @@
                 'keyword'        : keyword,
             }
 
-            const url = 'http://localhost:5050/api/board/pagination'
+            const url = 'http://localhost:8080/api/board/pagination'
 
             $.ajax({
                 url     :   url,
@@ -272,7 +255,7 @@
 
         // 게시글 목록 - 페이징
         function getPageList() {
-            const url = 'http://localhost:5050/api/board/page'
+            const url = 'http://localhost:8080/api/board/page'
 
             let data = {
                 pageNo      : page,
@@ -315,11 +298,12 @@
 
             // 게시글 목록 출력
             let boardData = ''
+            console.log(boardList)
             for(let i = 0 ; i < boardList.length ; i++ ){
                 const boardNo = boardList[i].boardNo
                 const title = `<a href='read.html?boardNo=${boardNo}'>${boardList[i].title}</a>`
 
-                const date = new Date(boardList[i].date)
+                const date = new Date(boardList[i].regDate)
                 const regDate = date.toISOString().split("T")[0]
 
                 let tr = `<tr>
@@ -381,7 +365,7 @@
                 pageCount   : pageCount,
             }
 
-            const url = 'http://localhost:5050/api/board/list'
+            const url = 'http://localhost:8080/api/board/page'
 
             $.ajax({
                 url     :   url,
@@ -417,7 +401,7 @@
                 order       : order,
             }
 
-            const url = 'http://localhost:5050/api/board/order'
+            const url = 'http://localhost:8080/api/board/page'
 
             $.ajax({
                 url     :   url,
